@@ -1,0 +1,27 @@
+name: Nung kim cương
+
+on:
+  workflow_dispatch: # Cho phép chạy thủ công hoặc gọi qua API GitHub
+
+jobs:
+  run-worker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Python Worker
+        env:
+          INIT_DATA: ${{ secrets.INIT_DATA }}
+          SALT: ${{ secrets.SALT }}
+        timeout-minutes: 310
+        run: python -u miner.py
