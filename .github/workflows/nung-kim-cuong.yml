@@ -19,9 +19,9 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Run Python Worker
+      - name: Run Python
         env:
           INIT_DATA: ${{ secrets.INIT_DATA }}
           SALT: ${{ secrets.SALT }}
         timeout-minutes: 310
-        run: python -u miner.py
+        run: python -u nung-kim-cuong.py
