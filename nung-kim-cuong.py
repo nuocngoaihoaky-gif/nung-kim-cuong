@@ -105,11 +105,16 @@ def main():
                 })
                 
                 if smelt_res.get("success"):
-                    new_process_id = smelt_res["process"]["ID"]
+                    # Xử lý an toàn tránh KeyError khi không có "process" hoặc "ID"
+                    process_data = smelt_res.get("process", {})
+                    new_process_id = process_data.get("ID", "Unknown (API không trả về ID)")
+                    
                     print(f"✅ Xong lò {pos}! processId mới: {new_process_id}")
                     successfully_handled.append(pos)
                 else:
                     print("❌ Lỗi nhét mẻ mới. Thử lại vòng sau.")
+                    # Thêm logic để in ra lỗi nếu cần debug thêm
+                    # print(f"Chi tiết lỗi API: {smelt_res}")
                     if min_sleep_time is None or min_sleep_time > 10:
                         min_sleep_time = 10
                 
