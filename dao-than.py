@@ -7,6 +7,7 @@ import string
 import json
 import base64
 import gzip
+import os
 
 WORLD_URL = "https://api.eeventapp.io/minegram/world"
 INIT_DATA = os.getenv("INIT_DATA")
