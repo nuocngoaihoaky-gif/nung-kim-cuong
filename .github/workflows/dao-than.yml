@@ -1,0 +1,41 @@
+name: Đào than
+
+on:
+  workflow_dispatch: # Cho phép chạy thủ công hoặc gọi qua API GitHub
+
+jobs:
+  run-worker:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Nếu 1 acc lỗi, acc kia vẫn chạy bình thường
+      matrix:
+        account: [1, 2] # Khai báo chạy 2 luồng độc lập
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Phân luồng và truyền INIT_DATA
+        run: |
+          if [ "${{ matrix.account }}" == "1" ]; then
+            echo "Đang nạp data cho Acc 1..."
+            echo "INIT_DATA=${{ secrets.INIT_DATA }}" >> $GITHUB_ENV
+          elif [ "${{ matrix.account }}" == "2" ]; then
+            echo "Đang nạp data cho Acc 2..."
+            echo "INIT_DATA=${{ secrets.INIT_DATA_2 }}" >> $GITHUB_ENV
+          fi
+
+      - name: Run Python
+        env:
+          # INIT_DATA đã được tự động nạp từ bước trên, ở đây chỉ cần gọi thêm SALT
+          SALT: ${{ secrets.SALT }}
+        timeout-minutes: 310
+        run: python -u dao-than.py
