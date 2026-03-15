@@ -48,5 +48,5 @@ jobs:
           # Nạp INIT theo khung giờ, còn SALT thì dùng chung
           INIT_DATA: ${{ env.FINAL_INIT }}
           SALT: ${{ secrets.SALT }}
-        timeout-minutes: 310
+        timeout-minutes: 120
         run: python -u nung-kim-cuong.py
