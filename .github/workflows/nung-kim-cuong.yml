@@ -19,9 +19,34 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
+      - name: Lựa chọn Acc theo khung giờ (Giờ VN)
+        env:
+          INIT1: ${{ secrets.INIT_DATA }}
+          INIT2: ${{ secrets.INIT_DATA2 }}
+        run: |
+          # Lấy giờ hiện tại theo múi giờ Việt Nam (0-23)
+          HOUR=$(TZ='Asia/Ho_Chi_Minh' date +%H)
+          echo "Bây giờ là $HOUR giờ ở Việt Nam."
+
+          # Check từ 7h đến trước 9h (7:00 - 8:59)
+          if [ "$HOUR" -ge 7 ] && [ "$HOUR" -lt 9 ]; then
+            echo "Khung giờ 7h-9h: Chạy Acc 1"
+            echo "FINAL_INIT=$INIT1" >> $GITHUB_ENV
+            
+          # Check từ 0h đến trước 3h (0:00 - 2:59)
+          elif [ "$HOUR" -ge 0 ] && [ "$HOUR" -lt 3 ]; then
+            echo "Khung giờ 0h-3h: Chạy Acc 2"
+            echo "FINAL_INIT=$INIT2" >> $GITHUB_ENV
+            
+          else
+            echo "❌ Không nằm trong khung giờ cày cuốc (Hiện tại: $HOUR h). Hủy chạy!"
+            exit 1 # Báo lỗi để ngắt workflow
+          fi
+
       - name: Run Python
         env:
-          INIT_DATA: ${{ secrets.INIT_DATA }}
+          # Nạp INIT theo khung giờ, còn SALT thì dùng chung
+          INIT_DATA: ${{ env.FINAL_INIT }}
           SALT: ${{ secrets.SALT }}
         timeout-minutes: 310
         run: python -u nung-kim-cuong.py
