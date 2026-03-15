@@ -22,7 +22,7 @@ jobs:
       - name: Lựa chọn Acc theo khung giờ (Giờ VN)
         env:
           INIT1: ${{ secrets.INIT_DATA }}
-          INIT2: ${{ secrets.INIT_DATA2 }}
+          INIT2: ${{ secrets.INIT_DATA_2 }}
         run: |
           # Lấy giờ hiện tại theo múi giờ Việt Nam (0-23)
           HOUR=$(TZ='Asia/Ho_Chi_Minh' date +%H)
