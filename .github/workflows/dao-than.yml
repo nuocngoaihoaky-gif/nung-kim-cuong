@@ -23,6 +23,12 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
+      - name: Kiểm tra IP của máy ảo
+        run: |
+          echo "🌐 IP Public của luồng ${{ matrix.account }} là:"
+          curl -s ifconfig.me
+          echo "" # In thêm một dòng trống cho dễ nhìn
+
       - name: Phân luồng và truyền INIT_DATA
         run: |
           if [ "${{ matrix.account }}" == "1" ]; then
